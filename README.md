@@ -1,8 +1,9 @@
 This is my personal code for the course Docker and Kubernetes: The Complete Guide by Stephen Grider in Udemy.
 
 
-[Introduction](#introduction) 
-[Installing](#introduction) 
+- [Introduction](#introduction) 
+- [Installing](#installing) 
+- [Manipulating Containers with Docker Client](#manipulating-containers-with-docker-client) 
 
 https://www.udemy.com/docker-and-kubernetes-the-complete-guide
 
@@ -55,3 +56,11 @@ Docker image is what I would call the container with a specific service. In the 
 
 
 # Manipulating Containers with Docker Client
+
+List of usefull docker commands that helps us:
+
+- docker ps: List us all the docker images are currently running in our docker-server, which in local context is our machine.
+- docker ps --all: List all the status of all images that had been instanciated and their status.
+- docker run "image-name": Attempt to run an image container
+- docker start/stop/restart -a "image-id": Attempt to start/stop/restart an image already in our docker-server.
+- docker system prune: Ask to delete current docker images cached in our machine locally, which in case we want to use them again would lead to another download of the image. If accepted will return also the ammount of disk space reclaimed.
