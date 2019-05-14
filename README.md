@@ -57,10 +57,34 @@ Docker image is what I would call the container with a specific service. In the 
 
 # Manipulating Containers with Docker Client
 
-List of usefull docker commands that helps us:
+List of useful docker commands that helps us:
 
 - docker ps: List us all the docker images are currently running in our docker-server, which in local context is our machine.
 - docker ps --all: List all the status of all images that had been instanciated and their status.
 - docker run "image-name": Attempt to run an image container
 - docker start/stop/restart -a "image-id": Attempt to start/stop/restart an image already in our docker-server.
 - docker system prune: Ask to delete current docker images cached in our machine locally, which in case we want to use them again would lead to another download of the image. If accepted will return also the ammount of disk space reclaimed.
+- docker logs "container id": will helps us checking out what is going on in the console of the container image we are running.
+- docker stop: when you have a running container and you need to stop it you can run docker stop "image-hash" and you will stop the container. If docker stop doesn't stop the container, docker server will run "docker kill" to stop the container.
+- docker kill "container id": It immediately stops the container.
+- docker exec -it: helps us to run commands into a running container.
+
+Example using docker exec
+
+Lets use our setup of redis to help us understand how useful docker exec -it can help us.
+We can install redis with docker by running:
+```
+docker run redis
+```
+With this we well start a container with an instance of redis-server inside, but how we would be able to start a redis-cli on it? If we run the normal redis-cli on our terminal we will not be able to connect with the redis-server that is running in our docker container. 
+Well there is where another tag of the docker-cli helps us: "exec -it"
+This command helps us running other commands inside an existing(and running) docker container. 
+If you run:
+```
+docker exec -it 68ddca21392c redis-cli
+```
+
+You console will show a successful connection with our redis-server inside the docker container.
+
+
+
