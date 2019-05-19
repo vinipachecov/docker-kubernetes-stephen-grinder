@@ -4,6 +4,8 @@ This is my personal code for the course Docker and Kubernetes: The Complete Guid
 - [Introduction](#introduction) 
 - [Installing](#installing) 
 - [Manipulating Containers with Docker Client](#manipulating-containers-with-docker-client) 
+- [Building Custom Images Thourgh Docker Server](#building-custom-images-through-docker-server) 
+- [Port Mapping](#port-mapping)
 
 https://www.udemy.com/docker-and-kubernetes-the-complete-guide
 
@@ -67,7 +69,8 @@ List of useful docker commands that helps us:
 - docker logs "container id": will helps us checking out what is going on in the console of the container image we are running.
 - docker stop: when you have a running container and you need to stop it you can run docker stop "image-hash" and you will stop the container. If docker stop doesn't stop the container, docker server will run "docker kill" to stop the container.
 - docker kill "container id": It immediately stops the container.
-- docker exec -it: helps us to run commands into a running container.
+- docker exec -it "container id: helps us to run commands into a running container.
+- docker exec -it "container id" sh: helps us to run commands into a running container allowing us to have access to a console inside the container.
 
 Example using docker exec
 
@@ -86,5 +89,115 @@ docker exec -it 68ddca21392c redis-cli
 
 You console will show a successful connection with our redis-server inside the docker container.
 
+### Building Custom Images Thourgh Docker Server
+
+Here in this section Stephen helps us understanding how to create a docker image. To create we follow some steps:
+
+1. Create a folder with the name you desire you want to the image
+2. Create a file with the name "Dockerfile"
+3. Fill the Dockerfile with your custom setup
+4. Run "docker build ." command to build an image
+5. Run the container id after the build to check it out your image in action.
+
+Steps 1 and 2 are very straightforward so I won't cover. Now, step 3 can be explained by three other steps:
+
+1. Using a base docker image
+2. Install dependencies
+3. Send commands to our container to do something
+
+This can be described in our redis-image example:
+
+```yml
+# Use an existing docker image as a base
+FROM alpine
+# Download and install a dependency
+RUN apk add --update redis
+## tell the image what to do when it starts as a container
+CMD ["redis-server"]
+```
+- FROM says will receive what image we will use. 
+- RUN install a dependency. apk is a package manager for the alpine image.
+- CMD runs commands into the docker container
+
+### Tagging a docker image
+To build our image and tag it you can create by using the command:
+```bash
+ docker build -t vinipachecov/redis:latest .
+```
+This command will create a new image to be used and tagged as "vinipachecov/redis"
 
 
+### Port Mapping
+Lets take as an example the super simple express app below:
+
+```js
+const express = require('express');
+
+const app = express();
+
+app.get('/', (req, res) => {
+  res.send('Hi there');
+})
+
+app.listen(8080, () => {
+  console.log('Listening on port 8080');
+})
+```
+
+If we create a file index.js with this code and create a Dockerfile to run it on a container, we will need an appropriate docker image to run node.js, as alpine itself doesn't have node.js. 
+The node:alpine image is the image suggested by the instructor to run node.js. Alpine is a keyword for a very small image in the docker world.
+
+### Copying files to the container
+
+In the simple-web folder we have a Dockerfile (that started) like this:
+```yml
+FROM node:alpine
+# set a workspace directory
+WORKDIR /usr/app
+COPY ./ ./
+RUN npm install
+CMD ["npm", "start"]
+```
+
+The problem is that whenever you run a build or have any file changes you will have to go through all the build process again and again: installing npm install and copying data and so on.
+Now let's look to the final version introduced by the instructor:
+
+```yml
+FROM node:alpine
+# set a workspace directory
+WORKDIR /usr/app
+COPY ./package.json ./
+RUN npm install
+COPY ./ ./
+CMD ["npm", "start"]
+```
+Here we can see we have another COPY command. The idea here is help caching your commands for faster builds by separating the operations to start the container. In this version of the file we will have faster builds as the copy commands were splitted into checking changes into package.json and checking changes into files AND THEN checking out to install stuff.
+
+### Docker Componse and Multiple containers
+
+Currently we were using things by using the docker-cli, but when we have to deal with networking multiple containers, it is usually more interesting to use docker-compose. However, we need to write docker-compose.yml files which have a different syntax than Dockerfile.
+
+```yml
+version: '3'
+services: 
+  redis-server:
+    image: 'redis'
+  node-app:
+    build: .
+    ports:
+      - "8081:8081"
+```
+
+- Version: the version of docker-compose to be used by this file.
+- services: services to be instanciated by this file
+- image: tells docker-compose to use a specific image from the dockerhub
+- "build: .": tells  the docker-compose to find a Dockerfile and build it.
+   
+Some docker-compose commands:
+
+- docker-compose build
+- docker-compose up
+- docker-compose down
+- docker compose up --build
+
+Why? Well because now we are dealing with multiple containers and not just one. docker-compose looks for the .yml file and decompose that file into multiple docker-cli commands to make the use of docker easier.
