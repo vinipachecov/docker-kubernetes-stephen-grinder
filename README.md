@@ -153,6 +153,12 @@ app.listen(8080, () => {
 If we create a file index.js with this code and create a Dockerfile to run it on a container, we will need an appropriate docker image to run node.js, as alpine itself doesn't have node.js. 
 The node:alpine image is the image suggested by the instructor to run node.js. Alpine is a keyword for a very small image in the docker world.
 
+To map a port we use -p tag in the command line: 
+
+```bash
+docker run -p 3000:3000 "container-id/image"
+```
+
 ### Copying files to the container
 
 In the simple-web folder we have a Dockerfile (that started) like this:
