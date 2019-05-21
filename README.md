@@ -10,7 +10,7 @@ This is my personal code for the course Docker and Kubernetes: The Complete Guid
 - [Building React-App and serving with Nginx](#building-react-app-and-serving-with-nginx)
 - [Docker Componse and Multiple containers](#docker-componse-and-multiple-containers)
 - [Docker Volume and hot-reloading](#docker-volume-and-hot-reloading)
-- [Tests](#test)
+- [Tests](#tests)
 - [Building React-App and serving with Nginx](#building-react-app-and-serving-with-nginx)
 
 https://www.udemy.com/docker-and-kubernetes-the-complete-guide
