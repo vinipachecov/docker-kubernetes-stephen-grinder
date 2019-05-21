@@ -9,7 +9,7 @@ This is my personal code for the course Docker and Kubernetes: The Complete Guid
 - [Copying files to the container](#copying-files-to-the-container)
 - [Building React-App and serving with Nginx](#building-react-app-and-serving-with-nginx)
 - [Docker Componse and Multiple containers](#docker-componse-and-multiple-containers)
-- [Docker Volume and hot-reloading](#docker Volume and hot-reloading)
+- [Docker Volume and hot-reloading](#docker-volume-and-hot-reloading)
 - [Tests](#test)
 - [Building React-App and serving with Nginx](#building-react-app-and-serving-with-nginx)
 
