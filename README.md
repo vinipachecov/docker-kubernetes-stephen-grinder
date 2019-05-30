@@ -215,7 +215,7 @@ Some docker-compose commands:
 
 Why? Well because now we are dealing with multiple containers and not just one. docker-compose looks for the .yml file and decompose that file into multiple docker-cli commands to make the use of docker easier.
 
-### Docker Volume and hot-reloading
+### Docker Volume and volume mapping
 Well copying seems to be working for our purposes so far. Still we have to rebuilt everytime we have changes in our files, which is not really an optimized workflow.
 
 To handle this on the fly changes, we have to do something similar that we were doing before on ports, but now on folders and files. Here we can run the following command with -v tags to map the folders we want to check changings.
@@ -248,8 +248,9 @@ services:
       - .:/app
     command: ["npm","run","test"]
 ```
+Look to the "volumes" inside the react tag. Here we set the volumes /app/node_modules to be mapping and in the second part of the volumes settings we map "." into "/app" which is mapping every file of our local machine into the container /app folder. With this we get back the hot-reloading that react provides us when running the development server. 
 
-Here we set the volumes /app/node_modules to be mapping and in the second part of the volumes settings we map "." into "/app" which is mapping every file of our local machine into the container /app folder. With this we get back the hot-reloading that react provides us when running the development server.
+PS: All of this means volume mapping or folder mapping into our container, but this does not trigger hot-reload, it only propagate forward the file changes into the mapped folder inside the docker container. This means that if you use Node.js you will still require nodemon or any other lib to watch changes into source code and restart your service inside the container.
 
 ### Tests
 Now, how about the the service "tests"? Well if we also want to have hot-reloading test runs, we will need to map folders aswell. So you might guess that we will need to run it and map it also. 
